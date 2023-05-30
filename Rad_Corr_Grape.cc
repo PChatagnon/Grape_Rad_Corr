@@ -14,7 +14,6 @@
 
 using namespace std;
 
-
 int main(int argc, char **argv)
 {
 
@@ -48,6 +47,9 @@ int main(int argc, char **argv)
     double rad_cut_off_min;
     double rad_cut_off_max;
     bool isLund;
+    bool smearVertex;
+    double vz_max;
+    double vz_min;
 
     for (map<std::string, std::string>::iterator it = m_Settings.begin(); it != m_Settings.end(); it++)
     {
@@ -70,6 +72,18 @@ int main(int argc, char **argv)
         else if (key.compare("LUND") == 0)
         {
             isLund = atoi(val.c_str());
+        }
+        else if (key.compare("vzMax") == 0)
+        {
+            vz_max = atof(val.c_str());
+        }
+        else if (key.compare("vzMin") == 0)
+        {
+            vz_min = atof(val.c_str());
+        }
+        else if (key.compare("smearVertex") == 0)
+        {
+            smearVertex = atoi(val.c_str());
         }
     }
 
@@ -253,9 +267,9 @@ int main(int argc, char **argv)
                     L_prot.SetPxPyPzE(px[0], py[0], pz[0], E[0]);
                     Lemep = L_em + L_ep;
 
-                    Eg = (L_em+L_ep+L_prot-L_prot_target).E();
-                    t = (L_prot_target-L_prot).M2();
-                    Q2 = (L_em+L_ep).M2();
+                    Eg = (L_em + L_ep + L_prot - L_prot_target).E();
+                    t = (L_prot_target - L_prot).M2();
+                    Q2 = (L_em + L_ep).M2();
                     /*cout<<"check CoM before rad"<<endl;
                     cout<<(L_em+L_ep).Px()<<"  "<<(L_em+L_ep).Py()<<"  "<<(L_em+L_ep).Pz()<<endl;
                     cout<<(L_em).Px()<<"  "<<(L_em).Py()<<"  "<<(L_em).Pz()<<endl;
@@ -320,7 +334,15 @@ int main(int argc, char **argv)
                     py_rad_ep = L_rad_2.Py();
                     pz_rad_ep = L_rad_2.Pz();
                     E_rad_ep = L_rad_2.E();
-                    vertex_z = vz[0];
+
+                    if (smearVertex)
+                    {
+                        vertex_z = rand.Uniform(vz_min, vz_max);
+                    }
+                    else
+                    {
+                        vertex_z = vz[0];
+                    }
 
                     Inv_Mass = (L_em + L_ep).M();
 

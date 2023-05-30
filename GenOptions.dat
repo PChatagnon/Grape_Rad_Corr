@@ -8,6 +8,7 @@ MinvMin  1.2
 Q2Cut    0.02
 LUND     0
 Seed     0
+smearVertex 1
 vzMin	 -5.5
 vzMax	 -0.5
 RAD_CORR 1
