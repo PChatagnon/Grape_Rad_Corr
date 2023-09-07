@@ -45,7 +45,6 @@ int main(int argc, char **argv)
 
     bool Rad_corr;
     double rad_cut_off_min;
-    double rad_cut_off_max;
     bool isLund;
     bool smearVertex;
     double vz_max;
@@ -64,10 +63,6 @@ int main(int argc, char **argv)
         else if (key.compare("rad_cut_off_min") == 0)
         {
             rad_cut_off_min = atof(val.c_str());
-        }
-        else if (key.compare("rad_cut_off_max") == 0)
-        {
-            rad_cut_off_max = atof(val.c_str());
         }
         else if (key.compare("LUND") == 0)
         {
@@ -89,7 +84,6 @@ int main(int argc, char **argv)
 
     cout << "Rad_corr = " << Rad_corr << endl;
     cout << "rad_cut_off_min = " << rad_cut_off_min << endl;
-    cout << "rad_cut_off_max = " << rad_cut_off_max << endl;
 
     const double Mp = 0.9383;
     const double Me = 0.00051;
@@ -192,7 +186,7 @@ int main(int argc, char **argv)
     rand.SetSeed(0);
 
     /////////////Set Rad Corr Parameters//////////////
-    RadiativeCorrections Rad_corr_1(rad_cut_off_min, rad_cut_off_max);
+    RadiativeCorrections Rad_corr_1(rad_cut_off_min);
     /////////////////////////////////////////////////
 
     for (int i = 1; i < argc; i++)
@@ -282,6 +276,7 @@ int main(int argc, char **argv)
                     //////////////////////////////////////////////
 
                     /////////////////Radiative correction must be performed in the CoM frame///////////////////
+                    Rad_corr_1.Set_Inv_Mass(sqrt(Q2));
                     bool in_rad_tail = (rand.Uniform(0, 1) > Rad_corr_1.Compute_cs_correction_factor((L_em + L_ep).M())); // randomly choose if the photon is above cut_off_min
 
                     if (Rad_corr && in_rad_tail)

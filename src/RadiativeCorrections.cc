@@ -53,14 +53,18 @@ double radiative_correction_factor(double *xx, double *par)
   return rad_corr_factor;
 }
 
-RadiativeCorrections::RadiativeCorrections(double cut_off_min_in, double cut_off_max_in)
+RadiativeCorrections::RadiativeCorrections(double cut_off_min_in)
 {
   cut_off_min = cut_off_min_in;
-  cut_off_max = cut_off_max_in;
   cs_function = new TF1("cs_emmision_photon_func", cs_emmision_photon, cut_off_min, cut_off_max, 2);
 
   cs_correction_factor_func = new TF1("cs_correction_factor_func", radiative_correction_factor, 1.0, 4.0, 2);
   cs_correction_factor_func->SetParameter(1, cut_off_min);
+}
+
+void RadiativeCorrections::Set_Inv_Mass(double Inv_Mass)
+{
+cut_off_max = Inv_Mass/2.0;
 }
 
 double  RadiativeCorrections::Compute_cs_correction_factor(double Inv_Mass)
